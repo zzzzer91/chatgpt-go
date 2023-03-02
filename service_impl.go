@@ -2,6 +2,7 @@ package chatgpt
 
 import (
 	"encoding/json"
+	"strings"
 
 	"github.com/pkg/errors"
 	"github.com/zzzzer91/httpgo"
@@ -34,7 +35,7 @@ func (s *serviceImpl) ChatWithMessages(msgs []Message) (string, error) {
 	if err != nil {
 		return "", errors.Wrap(err, "json decode error")
 	}
-	return jd.Choices[0].Message.Content, nil
+	return strings.TrimSpace(jd.Choices[0].Message.Content), nil
 }
 
 func (s *serviceImpl) Chat(text string) (string, error) {

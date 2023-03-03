@@ -17,7 +17,7 @@ type serviceImpl struct {
 
 var _ Service = (*serviceImpl)(nil)
 
-func (s *serviceImpl) ChatWithMessages(msgs []Message) (string, error) {
+func (s *serviceImpl) ChatWithMessages(msgs []*Message) (string, error) {
 	p := ChatRequest{
 		Model:       modelName,
 		Temperature: s.temperature,
@@ -39,7 +39,7 @@ func (s *serviceImpl) ChatWithMessages(msgs []Message) (string, error) {
 }
 
 func (s *serviceImpl) Chat(text string) (string, error) {
-	msgs := []Message{
+	msgs := []*Message{
 		{Role: RoleTypeSystem, Content: "You are a helpful assistant."},
 		{Role: RoleTypeUser, Content: text},
 	}

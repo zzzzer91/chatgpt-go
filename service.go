@@ -15,9 +15,8 @@ func NewService(secretKey string, opts ...Option) Service {
 		o(conf)
 	}
 	return &serviceImpl{
-		client:      httpgo.NewClient(conf.timeout, nil),
-		secretKey:   secretKey,
-		temperature: conf.temperature,
-		topP:        conf.topP,
+		client:       httpgo.NewClient(conf.timeout, nil),
+		secretKey:    secretKey,
+		clientConfig: conf,
 	}
 }

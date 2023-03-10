@@ -6,13 +6,17 @@ import (
 
 type clientConfig struct {
 	timeout     time.Duration
+	host        string
+	modelName   string
 	temperature float64
 	topP        float64
 }
 
 func newClientConfig() *clientConfig {
 	return &clientConfig{
-		timeout:     10 * time.Second,
+		timeout:     30 * time.Second,
+		host:        "api.openai.com",
+		modelName:   "gpt-3.5-turbo",
 		temperature: 1,
 		topP:        1,
 	}
@@ -23,6 +27,18 @@ type Option func(s *clientConfig)
 func WithTimeout(timeout time.Duration) Option {
 	return func(s *clientConfig) {
 		s.timeout = timeout
+	}
+}
+
+func WithHost(host string) Option {
+	return func(s *clientConfig) {
+		s.host = host
+	}
+}
+
+func WithModelName(modelName string) Option {
+	return func(s *clientConfig) {
+		s.modelName = modelName
 	}
 }
 

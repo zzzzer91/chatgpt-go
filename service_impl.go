@@ -40,7 +40,7 @@ func (i *serviceImpl) ChatWithMessages(msgs []*Message) (string, error) {
 
 func (i *serviceImpl) Chat(text string) (string, error) {
 	msgs := []*Message{
-		{Role: RoleTypeSystem, Content: "You are a helpful assistant."},
+		{Role: RoleTypeSystem, Content: i.defaultSystemMsg},
 		{Role: RoleTypeUser, Content: text},
 	}
 	return i.ChatWithMessages(msgs)

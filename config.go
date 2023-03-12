@@ -5,22 +5,24 @@ import (
 )
 
 type clientConfig struct {
-	timeout     time.Duration
-	host        string
-	path        string
-	modelName   string
-	temperature float64
-	topP        float64
+	timeout          time.Duration
+	host             string
+	path             string
+	modelName        string
+	temperature      float64
+	topP             float64
+	defaultSystemMsg string
 }
 
 func newClientConfig() *clientConfig {
 	return &clientConfig{
-		timeout:     30 * time.Second,
-		host:        "api.openai.com",
-		path:        "/v1/chat/completions",
-		modelName:   "gpt-3.5-turbo",
-		temperature: 1,
-		topP:        1,
+		timeout:          30 * time.Second,
+		host:             "api.openai.com",
+		path:             "/v1/chat/completions",
+		modelName:        "gpt-3.5-turbo",
+		defaultSystemMsg: "You are a helpful assistant.",
+		temperature:      1,
+		topP:             1,
 	}
 }
 
@@ -47,6 +49,12 @@ func WithPath(path string) Option {
 func WithModelName(modelName string) Option {
 	return func(s *clientConfig) {
 		s.modelName = modelName
+	}
+}
+
+func WithDefaultSystemMsg(defaultSystemMsg string) Option {
+	return func(s *clientConfig) {
+		s.defaultSystemMsg = defaultSystemMsg
 	}
 }
 

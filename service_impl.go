@@ -23,7 +23,7 @@ func (i *serviceImpl) ChatWithMessages(msgs []*Message) (string, error) {
 		TopP:        i.topP,
 	}
 	p.Messages = msgs
-	url := "https://" + i.host + chatPath
+	url := "https://" + i.host + i.path
 	resp, err := i.client.PostJsonWithAuth(url, &p, i.secretKey)
 	if err != nil {
 		return "", err

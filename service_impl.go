@@ -16,7 +16,7 @@ type serviceImpl struct {
 
 var _ Service = (*serviceImpl)(nil)
 
-func (i *serviceImpl) ChatWithMessages(msgs []*Message) (string, error) {
+func (i *serviceImpl) ChatWithMessages(msgs []*Message) (*ChatResponse, error) {
 	p := ChatRequest{
 		Model:       i.modelName,
 		Temperature: i.temperature,
@@ -26,16 +26,16 @@ func (i *serviceImpl) ChatWithMessages(msgs []*Message) (string, error) {
 	url := "https://" + i.host + i.path
 	resp, err := i.client.PostJsonWithAuth(url, &p, i.secretKey)
 	if err != nil {
-		return "", err
+		return nil, err
 	}
 	defer resp.Body.Close()
 
 	var jd ChatResponse
 	err = json.NewDecoder(resp.Body).Decode(&jd)
 	if err != nil {
-		return "", errors.Wrap(err, "json decode error")
+		return nil, errors.Wrap(err, "json decode error")
 	}
-	return strings.TrimSpace(jd.Choices[0].Message.Content), nil
+	return &jd, nil
 }
 
 func (i *serviceImpl) Chat(text string) (string, error) {
@@ -43,5 +43,9 @@ func (i *serviceImpl) Chat(text string) (string, error) {
 		{Role: RoleTypeSystem, Content: i.defaultSystemMsg},
 		{Role: RoleTypeUser, Content: text},
 	}
-	return i.ChatWithMessages(msgs)
+	resp, err := i.ChatWithMessages(msgs)
+	if err != nil {
+		return "", err
+	}
+	return strings.TrimSpace(resp.Choices[0].Message.Content), nil
 }

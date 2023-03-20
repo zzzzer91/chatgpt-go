@@ -5,8 +5,8 @@ import (
 )
 
 type Service interface {
+	ChatWithMessages(msgs []*Message) (*ChatResponse, error)
 	Chat(text string) (string, error)
-	ChatWithMessages(msgs []*Message) (string, error)
 }
 
 func NewService(secretKey string, opts ...Option) Service {

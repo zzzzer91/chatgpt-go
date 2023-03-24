@@ -5,10 +5,14 @@ import (
 	"testing"
 )
 
+const (
+	secretKey = ""
+	host      = ""
+)
+
 func TestChat(t *testing.T) {
-	secretKey := ""
-	s := NewService(secretKey)
-	resp, err := s.Chat("who are you")
+	s := NewService(secretKey, WithHost(host))
+	resp, err := s.ChatWithText("who are you")
 	if err != nil {
 		t.Fatal(err)
 	}

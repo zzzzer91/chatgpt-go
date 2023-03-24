@@ -5,8 +5,8 @@ import (
 )
 
 type Service interface {
-	ChatWithMessages(msgs []*Message) (*ChatResponse, error)
-	Chat(text string) (string, error)
+	Chat(msgs []*Message) (*ChatResponse, error)
+	ChatWithText(text string) (string, error)
 }
 
 func NewService(secretKey string, opts ...Option) Service {
@@ -16,7 +16,7 @@ func NewService(secretKey string, opts ...Option) Service {
 	}
 	return &serviceImpl{
 		client:       httpgo.NewClient(conf.timeout, nil),
-		secretKey:    secretKey,
+		token:        "Bearer " + secretKey,
 		clientConfig: conf,
 	}
 }

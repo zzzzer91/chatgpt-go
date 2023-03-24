@@ -9,14 +9,14 @@ import (
 )
 
 type serviceImpl struct {
-	client    *httpgo.Client
-	secretKey string
+	client *httpgo.Client
+	token  string
 	*clientConfig
 }
 
 var _ Service = (*serviceImpl)(nil)
 
-func (i *serviceImpl) ChatWithMessages(msgs []*Message) (*ChatResponse, error) {
+func (i *serviceImpl) Chat(msgs []*Message) (*ChatResponse, error) {
 	p := ChatRequest{
 		Model:       i.modelName,
 		Temperature: i.temperature,
@@ -24,7 +24,7 @@ func (i *serviceImpl) ChatWithMessages(msgs []*Message) (*ChatResponse, error) {
 	}
 	p.Messages = msgs
 	url := "https://" + i.host + i.path
-	resp, err := i.client.PostJsonWithAuth(url, &p, i.secretKey)
+	resp, err := i.client.PostJsonWithAuth(url, &p, i.token)
 	if err != nil {
 		return nil, err
 	}
@@ -38,12 +38,12 @@ func (i *serviceImpl) ChatWithMessages(msgs []*Message) (*ChatResponse, error) {
 	return &jd, nil
 }
 
-func (i *serviceImpl) Chat(text string) (string, error) {
+func (i *serviceImpl) ChatWithText(text string) (string, error) {
 	msgs := []*Message{
 		{Role: RoleTypeSystem, Content: i.defaultSystemMsg},
 		{Role: RoleTypeUser, Content: text},
 	}
-	resp, err := i.ChatWithMessages(msgs)
+	resp, err := i.Chat(msgs)
 	if err != nil {
 		return "", err
 	}

@@ -28,8 +28,9 @@ type ChatResponse struct {
 		TotalTokens      int `json:"total_tokens"`
 	} `json:"usage"`
 	Choices []struct {
-		Message      Message `json:"message"`
-		Index        int     `json:"index"`
-		FinishReason string  `json:"finish_reason"`
+		Message      *Message `json:"message,omitempty"`
+		Delta        *Message `json:"delta,omitempty"`
+		Index        int      `json:"index"`
+		FinishReason string   `json:"finish_reason"`
 	} `json:"choices"`
 }

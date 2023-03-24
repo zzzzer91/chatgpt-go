@@ -1,8 +1,9 @@
 package chatgpt
 
 import (
+	"bufio"
 	"encoding/json"
-	"strings"
+	"io"
 
 	"github.com/pkg/errors"
 	"github.com/zzzzer91/httpgo"
@@ -38,14 +39,54 @@ func (i *serviceImpl) Chat(msgs []*Message) (*ChatResponse, error) {
 	return &jd, nil
 }
 
-func (i *serviceImpl) ChatWithText(text string) (string, error) {
-	msgs := []*Message{
-		{Role: RoleTypeSystem, Content: i.defaultSystemMsg},
-		{Role: RoleTypeUser, Content: text},
+func (i *serviceImpl) ChatStream(msgs []*Message, f func(*ChatResponse) error) error {
+	p := ChatRequest{
+		Model:       i.modelName,
+		Temperature: i.temperature,
+		TopP:        i.topP,
+		Stream:      true,
 	}
-	resp, err := i.Chat(msgs)
+	p.Messages = msgs
+	url := "https://" + i.host + i.path
+	header := httpgo.Header{Key: "Accept", Val: "text/event-stream"}
+	resp, err := i.client.PostJsonWithAuth(url, &p, i.token, header)
 	if err != nil {
-		return "", err
+		return err
 	}
-	return strings.TrimSpace(resp.Choices[0].Message.Content), nil
+	defer resp.Body.Close()
+
+	r := bufio.NewReader(resp.Body)
+	for {
+		buf, err := r.ReadBytes('\n')
+		if err != nil {
+			if err == io.EOF {
+				break
+			}
+			return errors.Wrap(err, "ReadBytes error")
+		}
+		if string(buf) == "\n" {
+			continue
+		}
+		if len(buf) <= 7 {
+			return errors.New("length of data is invalid")
+		}
+		// Remove "data: " from the start of the line
+		// Remove "\n" from the end of the line
+		buf = buf[6 : len(buf)-1]
+		if string(buf) == "[DONE]" {
+			break
+		}
+		var m ChatResponse
+		err = json.Unmarshal(buf, &m)
+		if err != nil {
+			return errors.Wrap(err, "json.Unmarshal")
+		}
+
+		err = f(&m)
+		if err != nil {
+			return errors.Wrap(err, "execute f() error")
+		}
+	}
+
+	return nil
 }

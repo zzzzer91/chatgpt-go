@@ -76,13 +76,13 @@ func (i *serviceImpl) ChatStream(msgs []*Message, f func(*ChatResponse) error) e
 		if string(buf) == "[DONE]" {
 			break
 		}
-		var m ChatResponse
-		err = json.Unmarshal(buf, &m)
+		m := new(ChatResponse)
+		err = json.Unmarshal(buf, m)
 		if err != nil {
 			return errors.Wrap(err, "json.Unmarshal")
 		}
 
-		err = f(&m)
+		err = f(m)
 		if err != nil {
 			return errors.Wrap(err, "execute f() error")
 		}

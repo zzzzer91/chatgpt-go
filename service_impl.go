@@ -57,7 +57,7 @@ func (i *serviceImpl) ChatStream(msgs []*Message, f func(*ChatResponse) error) e
 
 	r := bufio.NewReader(resp.Body)
 	for {
-		buf, err := r.ReadBytes('\n')
+		buf, err := r.ReadSlice('\n')
 		if err != nil {
 			if err == io.EOF {
 				break

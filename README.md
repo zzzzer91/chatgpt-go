@@ -1,6 +1,6 @@
-ChatGPT go client
+# ChatGPT go client
 
-# Usage
+Usage:
 
 ```go
 func main() {

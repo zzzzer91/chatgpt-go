@@ -1,6 +1,7 @@
 package chatgpt
 
 import (
+	"context"
 	"fmt"
 	"testing"
 )
@@ -18,7 +19,7 @@ var (
 
 func TestChat(t *testing.T) {
 	s := NewService(secretKey, WithHost(host))
-	resp, err := s.Chat(msgs)
+	resp, err := s.Chat(context.Background(), msgs)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -27,7 +28,7 @@ func TestChat(t *testing.T) {
 
 func TestChatStream(t *testing.T) {
 	s := NewService(secretKey, WithHost(host))
-	err := s.ChatStream(msgs, func(resp *ChatResponse) error {
+	err := s.ChatStream(context.Background(), msgs, func(resp *ChatResponse) error {
 		fmt.Print(resp.Choices[0].Delta.Content)
 		return nil
 	})

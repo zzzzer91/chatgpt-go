@@ -10,13 +10,14 @@ func main() {
 		{Role: RoleTypeUser, Content: "who are you"},
 	}
 
-	resp, err := cli.Chat(msgs)
+	ctx := context.Background()
+	resp, err := cli.Chat(ctx, msgs)
 	if err != nil {
 		panic(err)
 	}
 	fmt.Println(resp.Choices[0].Message.Content)
 
-	err = s.ChatStream(msgs, func(resp *ChatResponse) error {
+	err = s.ChatStream(ctx, msgs, func(resp *ChatResponse) error {
 		fmt.Print(resp.Choices[0].Delta.Content)
 		return nil
 	})

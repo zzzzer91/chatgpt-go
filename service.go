@@ -75,6 +75,12 @@ func (i *serviceImpl) ChatStream(ctx context.Context, msgs []*Message, f func(*C
 
 	r := bufio.NewReader(resp.Body)
 	for {
+		select {
+		case <-ctx.Done():
+			return errors.WithStack(ctx.Err())
+		default:
+		}
+
 		buf, err := r.ReadSlice('\n')
 		if err != nil {
 			if err == io.EOF {

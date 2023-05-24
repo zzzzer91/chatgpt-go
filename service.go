@@ -43,7 +43,7 @@ func (i *serviceImpl) Chat(ctx context.Context, msgs []*Message) (*ChatResponse,
 	}
 	p.Messages = msgs
 	url := "https://" + i.host + i.path
-	resp, err := i.client.PostJsonWithAuth(ctx, url, &p, i.token)
+	resp, err := i.client.PostJsonWithAuth(ctx, url, i.token, &p)
 	if err != nil {
 		return nil, err
 	}
@@ -67,7 +67,7 @@ func (i *serviceImpl) ChatStream(ctx context.Context, msgs []*Message, f func(*C
 	p.Messages = msgs
 	url := "https://" + i.host + i.path
 	header := httpgo.Header{Key: "Accept", Val: "text/event-stream"}
-	resp, err := i.client.PostJsonWithAuth(ctx, url, &p, i.token, header)
+	resp, err := i.client.PostJsonWithAuth(ctx, url, i.token, &p, header)
 	if err != nil {
 		return err
 	}

@@ -1,4 +1,4 @@
 github.com/pkg/errors v0.9.1 h1:FEBLx1zS214owpjy7qsBeixbURkuhQAwrK5UwLGTwt4=
 github.com/pkg/errors v0.9.1/go.mod h1:bwawxfHBFNV+L2hUp1rHADufV3IMtnDRdf1r5NINEl0=
-github.com/zzzzer91/httpgo v1.1.0 h1:yhLeW3XoH6mX5Vavg/7t5HDwqaOH8t/JqpoNCPrFtLA=
-github.com/zzzzer91/httpgo v1.1.0/go.mod h1:S1RThqxrxkxJGfPkWNxDnX/FL7C790eCTomqRyqEEo8=
+github.com/zzzzer91/httpgo v1.2.1 h1:EzFiVBq8hz1A01Jat8gvMAGj1DH+JeV3MI2bSwOqSxQ=
+github.com/zzzzer91/httpgo v1.2.1/go.mod h1:S1RThqxrxkxJGfPkWNxDnX/FL7C790eCTomqRyqEEo8=
